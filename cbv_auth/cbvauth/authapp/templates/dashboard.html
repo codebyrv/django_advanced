@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+
+<h1>Welcome {{ request.user.username }}</h1>
+
+{% if request.user.is_authenticated %}
+    <p>You are logged in.</p>
+{% else %}
+    <p>You are not logged in.</p>
+{% endif %}
+
+</body>
+</html>
