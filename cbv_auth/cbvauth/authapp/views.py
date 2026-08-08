@@ -3,6 +3,8 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from authapp.models import Student
 # Create your views here.
 
 class Home(View):
@@ -10,7 +12,7 @@ class Home(View):
         return render(request,'index.html')
     
     
-class Dashboard(View):
+class Dashboard(LoginRequiredMixin,View):
     def get(self, request):
         return render(request,'dashboard.html')    
     
@@ -64,3 +66,46 @@ class LoginView(View):
             messages.info(request,"invalid username or password, check again ")
             return render(request,'login.html')
             
+from django.contrib.auth import logout
+from django.views import View
+from django.shortcuts import redirect
+
+
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        return redirect('login')            
+            
+            
+class Create(LoginRequiredMixin,View):
+    
+    
+    
+    
+    def get(self,request):
+        students=Student.objects.all()
+        return render(request,'create.html',{"students":students})            
+    
+    def post(self,request):
+        
+        name=request.POST.get("name")
+        age=request.POST.get("age")
+        course=request.POST.get("course")
+        
+        
+        Student.objects.create(name=name,age=age,course=course)
+        
+        messages.success(request,"SAVED")
+        
+        return redirect('dashboard')
+    
+    
+
+class ListView(LoginRequiredMixin,View):
+    
+    def get(self,request):
+        
+        list=Student.objects.all()
+        
+        return render(request,'list.html',{"list":list})
