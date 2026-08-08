@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth import authenticate,login
@@ -94,7 +94,7 @@ class Create(LoginRequiredMixin,View):
         course=request.POST.get("course")
         
         
-        Student.objects.create(name=name,age=age,course=course)
+        Student.objects.create(name=name,age=age,course=course,created_by=request.user)
         
         messages.success(request,"SAVED")
         
@@ -106,6 +106,17 @@ class ListView(LoginRequiredMixin,View):
     
     def get(self,request):
         
-        list=Student.objects.all()
+        list=Student.objects.filter(created_by=request.user)
         
         return render(request,'list.html',{"list":list})
+    
+    
+    
+class UpdateView(LoginRequiredMixin, View):
+    
+    
+    def get(self,request,id):
+        
+        student=get_object_or_404(Student,id=id)
+        
+        return render(request,'update.html')

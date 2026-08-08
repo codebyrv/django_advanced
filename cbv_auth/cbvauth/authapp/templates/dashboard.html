@@ -1,23 +1,54 @@
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Home</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background: darkblue;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Welcome {{ request.user.username }}</h1>
+    <h1>Welcome {{ request.user.username }}</h1>
 
-{% if request.user.is_authenticated %}
-    <p>You are logged in.</p>
-{% else %}
-    <p>You are not logged in.</p>
-{% endif %}
+    {% if request.user.is_authenticated %}
 
+        <p>You are logged in.</p>
 
+        <a href="{% url 'list' %}" class="btn">
+            View Student List
+        </a>
 
+    {% else %}
 
+        <p>You are not logged in.</p>
 
+        <a href="{% url 'login' %}" class="btn">
+            Login
+        </a>
 
+    {% endif %}
 
 </body>
 </html>
+```
